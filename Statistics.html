@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Статистика</title>
+</head>
+<body>
+    <a href = "GetOrders.html">Получить заявки</a>
+    <a href = "AddOrders.html">Добавить новую заявку</a>
+    <table>
+        <tr><th>Статистика</th></tr>
+    </table>
+    <script>
+        let table = document.querySelector("table");
+        GetStatistic();
+
+        async function GetStatistic() {
+
+            let response = await fetch("http://localhost:5263/statistics", {method:"GET"})
+            let statistic = await response.json();
+
+            table.append(CreateTd(`<td>Количество выполненных заявок: </td><td>${statistic.complete_count} заявок</td>`));
+            table.append(CreateTd(`<td>Среднее время выполнения: </td><td>${get_average_time_to_complete} дней</td>`));
+            table.append(CreateTd(`<th>Статистика по типам неисправностей</th>`));
+
+            Object.entries(statistic.get_problem_type_stat).forEach(([key, value]) => {
+                table.append(CreateTd(`<td>${key}: </td><td>${value}: </td>`));
+            });
+                
+        }
+
+        function CreateTd(data)
+        {
+            let tr = document.createElement("tr");
+            tr.innerHTML = data;
+            return tr;
+        }
+    </script>
+</body>
+</html>
